@@ -1,0 +1,11 @@
+ {
+    	"model-name": "yolov7-tiny-custom",
+    	"num-labels": 1,
+    	"labels": [
+    		{
+    			"label": 0,
+    			"name": "license_plate",
+    			"display_name": "license_plate"
+    		}
+	]
+}
