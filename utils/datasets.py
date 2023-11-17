@@ -389,10 +389,13 @@ class LoadImagesAndLabels(Dataset):  # for training/testing
         self.label_files = img2label_paths(self.img_files)  # labels
         cache_path = (p if p.is_file() else Path(self.label_files[0]).parent).with_suffix('.cache')  # cached labels
         if cache_path.is_file():
+            
             cache, exists = torch.load(cache_path), True  # load
-            #if cache['hash'] != get_hash(self.label_files + self.img_files) or 'version' not in cache:  # changed
-            #    cache, exists = self.cache_labels(cache_path, prefix), False  # re-cache
+            if cache['hash'] != get_hash(self.label_files + self.img_files) or 'version' not in cache:  # changed
+                cache, exists = self.cache_labels(cache_path, prefix), False  # re-cache
+                
         else:
+            print(self.cache_labels(cache_path, prefix))
             cache, exists = self.cache_labels(cache_path, prefix), False  # cache
 
         # Display cache
@@ -507,6 +510,8 @@ class LoadImagesAndLabels(Dataset):  # for training/testing
             except Exception as e:
                 nc += 1
                 print(f'{prefix}WARNING: Ignoring corrupted image and/or label {im_file}: {e}')
+                logging.info(f'{prefix}WARNING: Ignoring corrupted image and/or label {im_file}: {e}')
+                return [None, None, None, None, nm, nf, ne, nc]
 
             pbar.desc = f"{prefix}Scanning '{path.parent / path.stem}' images and labels... " \
                         f"{nf} found, {nm} missing, {ne} empty, {nc} corrupted"

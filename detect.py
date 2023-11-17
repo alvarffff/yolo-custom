@@ -88,9 +88,18 @@ def detect(save_img=False):
             pred = model(img, augment=opt.augment)[0]
         t2 = time_synchronized()
 
+        print("####################")
+        print(pred)
+        print(pred.shape[1])
+        print(pred.shape[2])
+        print(pred[..., 4])
+
         # Apply NMS
         pred = non_max_suppression(pred, opt.conf_thres, opt.iou_thres, classes=opt.classes, agnostic=opt.agnostic_nms)
         t3 = time_synchronized()
+
+        print("####################")
+        print(pred)
 
         # Apply Classifier
         if classify:
@@ -103,6 +112,9 @@ def detect(save_img=False):
             else:
                 p, s, im0, frame = path, '', im0s, getattr(dataset, 'frame', 0)
 
+            print("####################")
+            print(i)
+            print(det)
             p = Path(p)  # to Path
             save_path = str(save_dir / p.name)  # img.jpg
             txt_path = str(save_dir / 'labels' / p.stem) + ('' if dataset.mode == 'image' else f'_{frame}')  # img.txt
